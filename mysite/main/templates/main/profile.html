@@ -1,0 +1,249 @@
+{% extends "main/layout.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="card sidebar-card">
+                <div class="card-body text-center">
+                    <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 120px; height: 120px;">
+                        <i class="bi bi-person-fill" style="font-size: 3rem;"></i>
+                    </div>
+                    <h3 class="card-title">{{ user.username }}</h3>
+                    <p class="text-muted">Portal User</p>
+                    <p class="text-muted small">
+                        <i class="bi bi-calendar3 me-2"></i>
+                        Registered: {{ user.date_joined|date:"d M Y" }}
+                    </p>
+                    <div class="row text-center mt-3 justify-content-center">
+                        <div class="col-4">
+                            <div class="h5 text-primary mb-0">{{ articles_count }}</div>
+                            <small class="text-muted">Articles</small>
+                        </div>
+                        <div class="col-4">
+                            <div class="h5 text-success mb-0">{{ comments_count }}</div>
+                            <small class="text-muted">Comments</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card sidebar-card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'create-article' %}" class="btn btn-outline-success">
+                            <i class="bi bi-plus-circle me-2"></i>Add Article
+                        </a>
+                        <a href="{% url 'change-password' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-key me-2"></i>Change Password
+                        </a>
+                        <form method="post" action="{% url 'logout' %}" style="display:inline">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger w-100" type="submit">
+                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-8">
+            <div class="alert alert-success border-0 mb-4" style="background: linear-gradient(45deg, #d4edda, #c3e6cb);">
+                <div class="d-flex align-items-center">
+                    <div class="me-3">
+                        <i class="bi bi-person-check display-4 text-success"></i>
+                    </div>
+                    <div>
+                        <h4 class="alert-heading mb-2">Welcome, {{ user.username }}!</h4>
+                        <p class="mb-0">You have successfully logged into your account. Here you can manage your profile and settings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card news-detail">
+                <div class="card-header">
+                    <ul class="nav nav-tabs card-header-tabs" id="profileTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                                <i class="bi bi-house me-2"></i>Overview
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="articles-tab" data-bs-toggle="tab" data-bs-target="#articles" type="button" role="tab">
+                                <i class="bi bi-newspaper me-2"></i>Articles
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="comments-tab" data-bs-toggle="tab" data-bs-target="#comments" type="button" role="tab">
+                                <i class="bi bi-chat-dots me-2"></i>Comments
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+                                <i class="bi bi-gear me-2"></i>Settings
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="tab-content" id="profileTabContent">
+                        <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                            <div class="row">
+                                <div class="col-6 mb-4">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-primary">
+                                                <i class="bi bi-clock-history me-2"></i>Last Activity
+                                            </h6>
+                                            <p class="card-text">Today at {{ user.last_login|date:"g:i A" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 mb-4">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <h6 class="card-title text-success">
+                                                <i class="bi bi-shield-check me-2"></i>Account Status
+                                            </h6>
+                                            <p class="card-text text-success">Active</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h6 class="mt-4 mb-3">Recent Activity</h6>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item border-0 px-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-eye text-info me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">Viewed article "AI Standards"</h6>
+                                            <small class="text-muted">2 hours ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-group-item border-0 px-0">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-chat text-primary me-3"></i>
+                                        <div>
+                                            <h6 class="mb-1">Commented on article "Electric Vehicles"</h6>
+                                            <small class="text-muted">3 days ago</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="articles" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6>Your Publications</h6>
+                                <a href="{% url 'create-article' %}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-plus me-1"></i>New Article
+                                </a>
+                            </div>
+
+                            {% if articles %}
+                                <ul class="list-group">
+                                    {% for article in articles %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <a href="{% url 'news-detail' article.id %}"
+                                                   class="fw-semibold text-decoration-none">
+                                                    {{ article.title }}
+                                                </a>
+                                                <div class="text-muted small">
+                                                    {{ article.date|date:"d M Y, g:i A" }}
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-center py-5 text-muted">
+                                    <i class="bi bi-file-text display-1 mb-3"></i>
+                                    <h5>You don't have any articles yet</h5>
+                                    <p>Create your first publication!</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tab-pane fade" id="comments" role="tabpanel">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6>Your Comments</h6>
+                            </div>
+
+                            {% if comments %}
+                                <ul class="list-group">
+                                    {% for comment in comments %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <div class="small text-muted mb-1">
+                                                    On article:
+                                                    <a href="{% url 'news-detail' comment.article.id %}"
+                                                       class="text-decoration-none fw-semibold">
+                                                        {{ comment.article.title }}
+                                                    </a>
+                                                    • {{ comment.date|date:"d M Y, g:i A" }}
+                                                </div>
+                                                <div>{{ comment.content }}</div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-center py-5 text-muted">
+                                    <i class="bi bi-chat-dots display-1 mb-3"></i>
+                                    <h5>No comments yet</h5>
+                                    <p>Share your opinion on interesting articles!</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tab-pane fade" id="settings" role="tabpanel">
+                            <form method="post" action="{% url 'profile' %}">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Username</label>
+                                        <input name="username" type="text" class="form-control"
+                                               value="{{ user.username }}">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input name="email" type="email" class="form-control"
+                                               value="{{ user.email }}">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">First Name</label>
+                                        <input name="first_name" type="text" class="form-control"
+                                               value="{{ user.first_name }}">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">Last Name</label>
+                                        <input name="last_name" type="text" class="form-control"
+                                               value="{{ user.last_name }}">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check2 me-2"></i>Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
